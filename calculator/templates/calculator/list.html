@@ -1,18 +1,127 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<!--
-TODO: You must display the data sent to the template in a table with the follow headers
- - Nome, Documento, Consumo, Tipo, Cobertura, Desconto, Economia
+{% extends 'main.html' %}
 
-TODO: You must provide 2 selects to filter the rows based in:
- 1) consumer type
- 2) consumption range
- - You must create the filter functionality in the front-end using JS
--->
-</body>
-</html>
+{% block content %}
+{% load static %}
+<style>
+
+.import-container
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-right: 0px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+  .styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+</style>
+
+
+<!-- Formulário de Filtro -->
+<div class="main-container">
+   <h1>Lista de Consumidores</h1>
+    
+    <form method="GET">
+      <label for="consumer_type">Tipo de Consumidor:</label>
+      <select name="consumer_type" id="consumer_type">
+        <option value="" {% if not consumer_type %}selected{% endif %}>Todos</option>
+        <option value="Residencial" {% if consumer_type == 'Residencial' %}selected{% endif %}>Residencial</option>
+        <option value="Comercial" {% if consumer_type == 'Comercial' %}selected{% endif %}>Comercial</option>
+        <option value="Industrial" {% if consumer_type == 'Industrial' %}selected{% endif %}>Industrial</option>
+      </select>
+    
+      <label for="min_consumption">Consumo Mínimo:</label>
+      <input type="number" name="min_consumption" id="min_consumption" value="{{ min_consumption|default_if_none:'' }}">
+    
+      <label for="max_consumption">Consumo Máximo:</label>
+      <input type="number" name="max_consumption" id="max_consumption" value="{{ max_consumption|default_if_none:'' }}">
+    
+      <button type="submit">Filtrar</button>
+    </form>
+    
+    <table class="styled-table">
+      <thead>
+        <tr class="active-row">
+          <th>Nome</th>
+          <th>Documento</th>
+          <th>Consumo (kWh)</th>
+          <th>Economia Anual (R$)</th>
+          <th>Economia Mensal (R$)</th>
+          <th>Desconto Aplicado (%)</th>
+          <th>Percentual de Cobertura</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for consumer in consumers %}
+          <tr>
+            <td>{{ consumer.name }}</td>
+            <td>{{ consumer.document }}</td>
+            <td>{{ consumer.consumption }}</td>
+            <td>{{ consumer.annual_savings }}</td>
+            <td>{{ consumer.monthly_savings }}</td>
+            <td>{{ consumer.applied_discount }}</td>
+            <td>{{ consumer.coverage }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+      <!-- Item à esquerda -->
+      <div>
+        <a href="{% url 'create_consumer' %}">Adicionar novo consumidor</a>
+      </div>
+
+      <!-- Item à direita -->
+      <div class="import-container">
+        <h2>Importar Consumidores via Excel</h2>
+        <form method="POST" enctype="multipart/form-data" action="{% url 'import_consumers' %}">
+          {% csrf_token %}
+          <input type="file" name="file" accept=".xlsx" required>
+          <button type="submit">Importar</button>
+        </form>
+      </div>
+
+</div>
+
+{% endblock %}

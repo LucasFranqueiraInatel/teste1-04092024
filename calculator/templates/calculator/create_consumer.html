@@ -1,0 +1,33 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1>Cadastrar Novo Consumidor</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Cadastrar</button>
+</form>
+<a href="{% url 'consumer_list' %}">Voltar para a lista de consumidores</a>
+
+<!-- Script para preencher cidade e estado automaticamente -->
+<script>
+  document.getElementById('id_zip_code').addEventListener('blur', function() {
+    var cep = this.value.replace(/\D/g, '');  // Remove caracteres não numéricos
+
+    if (cep.length === 8) {  // O CEP deve ter 8 dígitos
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => response.json())
+        .then(data => {
+          if (!data.erro) {
+            // Preenche os campos de cidade e estado automaticamente
+            document.getElementById('id_city').value = data.localidade;
+            document.getElementById('id_state').value = data.uf;
+          } else {
+            alert('CEP não encontrado.');
+          }
+        })
+        .catch(error => console.error('Erro na consulta do CEP:', error));
+    }
+  });
+</script>
+{% endblock %}
