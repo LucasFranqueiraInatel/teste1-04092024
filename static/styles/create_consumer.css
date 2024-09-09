@@ -3,14 +3,14 @@
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: var(--color-dark);
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .form-container h1 {
     text-align: center;
-    color: #333;
+    color: #fff;
     margin-bottom: 20px;
 }
 
@@ -18,7 +18,7 @@
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
-    color: #555;
+    color: white;
 }
 
 .form-container input, .form-container select {
