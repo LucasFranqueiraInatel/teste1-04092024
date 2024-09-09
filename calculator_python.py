@@ -3,7 +3,6 @@ def calculator(consumption: list, distributor_tax: float, tax_type: str) -> tupl
     Returns a tuple of floats containing annual savings, monthly savings, applied_discount, and coverage.
     """
     average_consumption = sum(consumption) / len(consumption)
-    print (average_consumption)
     
     discount_rates = {
         "Residencial": [(10000, 0.18), (20000, 0.22), (float('inf'), 0.25)],

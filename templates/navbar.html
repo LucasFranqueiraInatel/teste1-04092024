@@ -1,0 +1,14 @@
+{% load static %}
+<header class="header header--loggedIn">
+  <div class="container">
+    <a href="{% url 'consumer_list' %}" class="header__logo"><h1>Digital Grid</h1></a>
+    <nav class="header__menu">
+      <!-- Logged In -->
+      <div class="header__itens">
+        <a href="{% url 'consumer_list' %}">Consumer List</a>
+        <a href="{% url "calculator" %}">Calculadora</a>
+      </div>
+
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,63 @@
+{% extends 'main.html' %}
+
+{% block content %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'styles/calculator.css' %}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+  <div class="simulator-container">
+    <h1 class="simulator-title">Simulador de Consumo de Energia</h1>
+    <form action="{% url 'calculator' %}" method="post" class="simulator-form">
+      {% csrf_token %}
+      <div class="simulator-field">
+        <label class="form-label" for="consumption">Consumo (kWh):</label>
+        <div class="input-wrapper">
+          <input type="number" name="consumption" id="consumption" required class="simulator-input" />
+        </div>
+      </div>
+
+      <div class="simulator-field">
+        <label class="form-label" for="distributor_tax">Taxa da distribuidora:</label>
+        <div class="input-wrapper">
+          <input type="number" step="0.0000000000001" name="distributor_tax" id="distributor_tax" required class="simulator-input" />
+        </div>
+      </div>
+
+      <div class="simulator-field">
+        <label class="form-label" for="tax_type">Tipo de taxa:</label>
+        <select name="tax_type" id="tax_type" required class="simulator-input">
+          <option value="Residencial">Residencial</option>
+          <option value="Comercial">Comercial</option>
+          <option value="Industrial">Industrial</option>
+        </select>
+      </div>
+
+      <div class="simulator-buttons">
+        <button type="submit" class="simulator-button">Calcular</button>
+        <button type="reset" class="simulator-button reset-button">Limpar</button>
+      </div>
+    </form>
+  </div>
+
+  {% if annual_savings %}
+    <div class="result-container">
+      <p class="result-text">
+        <i class="fas fa-dollar-sign"></i> Annual Saving: <span class="result-value">{{ annual_savings }}</span>
+      </p>
+      <p class="result-text">
+        <i class="fas fa-calendar"></i> Monthly Savings: <span class="result-value">{{ monthly_savings }}</span>
+      </p>
+      <p class="result-text">
+        <i class="fas fa-percent"></i> Applied Discount: <span class="result-value">{{ applied_discount }}</span>
+      </p>
+      <p class="result-text">
+        <i class="fas fa-globe"></i> Coverage: <span class="result-value">{{ coverage }}</span>
+      </p>
+    </div>
+
+    <script>
+      document.querySelector('.result-container').classList.add('show')
+    </script>
+  {% endif %}
+{% endblock %}
